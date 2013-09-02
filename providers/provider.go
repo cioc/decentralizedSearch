@@ -1,7 +1,7 @@
 package providers
 
 import (
-  "github.com/decentralizedSearch/searchResult"
+  "github.com/cioc/decentralizedSearch/searchResult"
 )
 
 type Provider interface {

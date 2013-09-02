@@ -3,10 +3,10 @@ package main
 import (
   "fmt"
 
-  "github.com/decentralizedSearch/providers"
-  "github.com/decentralizedSearch/searchResult"
-//  "github.com/decentralizedSearch/providers/stackoverflow"
-  "github.com/decentralizedSearch/providers/wikipedia"
+  "github.com/cioc/decentralizedSearch/providers"
+  "github.com/cioc/decentralizedSearch/searchResult"
+//  "github.com/cioc/decentralizedSearch/providers/stackoverflow"
+  "github.com/cioc/decentralizedSearch/providers/wikipedia"
 )
 
 //github

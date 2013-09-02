@@ -3,7 +3,7 @@ package wikipedia
 //http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=matrix
 //go to http://en.wikipedia.org/wiki/<term>
 import (
-  "github.com/decentralizedSearch/searchResult"
+  "github.com/cioc/decentralizedSearch/searchResult"
 
   "net/http"
   "net/url"

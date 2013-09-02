@@ -1,7 +1,7 @@
 package stackoverflow
 
 import (
-  "github.com/decentralizedSearch/searchResult"
+  "github.com/cioc/decentralizedSearch/searchResult"
 
   "net/http"
   "net/url"
