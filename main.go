@@ -2,37 +2,59 @@ package main
 
 import (
   "fmt"
+  "log"
 
   "github.com/cioc/decentralizedSearch/providers"
-  "github.com/cioc/decentralizedSearch/searchResult"
-//  "github.com/cioc/decentralizedSearch/providers/stackoverflow"
+  "github.com/cioc/decentralizedSearch/search"
+  "github.com/cioc/decentralizedSearch/providers/stackoverflow"
   "github.com/cioc/decentralizedSearch/providers/wikipedia"
+  "github.com/cioc/decentralizedSearch/searchResult"
+
+  "net/http"
+  "net/url"
+
+  "encoding/json"
 )
 
-//github
-//http://developer.github.com/v3/search/
+const handleSearchLen = len("/api/search/")
 
-func Search(query string, ps []providers.Provider) ([][]searchResult.SearchResult) {
-  results := make([][]searchResult.SearchResult, 0, len(ps))
-  for _,p :=  range ps {
-    r, err := p.Search(query)
-    if err != nil {
-      fmt.Println(err)
-      continue
-    }
-    results = append(results, r)
+var myProviders []providers.Provider
+
+func handleIndex(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func handleSearch(w http.ResponseWriter, r *http.Request) {
+  query, err := url.QueryUnescape(r.URL.Path[handleSearchLen:])
+  if err != nil {
+    log.Fatal(err)
   }
-  return results
+  results := search.Search(query, myProviders)
+  totalResults := 0
+  for _, r := range results {
+    totalResults +=  len(r)
+  }
+  o := make([]searchResult.SearchResult, 0, totalResults)
+  for _,r := range results {
+    o = append(o, r...)
+  }
+  b, err := json.Marshal(o)
+  if err != nil {
+    log.Fatal(err)
+  }
+  fmt.Fprintf(w, string(b))
 }
 
 func main() {
-//  so := stackoverflow.New()
+  //setup all search providers
+  so := stackoverflow.New()
   wikipedia := wikipedia.New()
-  providers := []providers.Provider{wikipedia}
-  results := Search("mergesort", providers)
-  for i := range results {
-    for _, r := range results[i] {
-      fmt.Println(r)
-    }
-  }
+  myProviders = []providers.Provider{so, wikipedia}
+
+  //setup the web server
+  http.Handle("/", http.FileServer(http.Dir("./content")))
+  http.HandleFunc("/api/search/", handleSearch)
+  log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
+
